@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace CA_problem
 {
@@ -106,23 +107,24 @@ namespace CA_problem
 
         static void Main(string[] args)
         {
+            List<string> lines = new List<string>();
             Random random = new Random();
-            int[] NoOfNodesRange = { 2, 20 };
+            int[] NoOfNodesRange = { 0, 100 };
             int TotalTicks = 0;
             int Ticks = 0;
             int Counter = 0;
-            for (int i = 0; i < 1000; i++)
+            for (int i = NoOfNodesRange[0]; i < NoOfNodesRange[1]; i++)
             {
-                int NoOfNodes = random.Next(NoOfNodesRange[0], NoOfNodesRange[1]);
+                int NoOfNodes = i;
                 List<Node> nodes = new List<Node>();
                 int[] TimeRandomRange = { 0, 3 };
                 int[] DataRandomRange = { 1, 4 };
-                int StartingPrime = 3;
+                int StartingPrime = 2;
                 List<int> primes = PrimesList(StartingPrime, NoOfNodes);
 
-                for (int x = 1; x < 11; x++)
+                for (int x = 1; x < 6; x++)
                 {
-                    for (int y = 0; y < 10000; y++)
+                    for (int y = 0; y < 1000; y++)
                     {
                         Ticks = 0;
                         nodes = NewRandomList(NoOfNodes, TimeRandomRange, DataRandomRange, random);
@@ -134,7 +136,7 @@ namespace CA_problem
                         TotalTicks += Ticks;
                     }
                 }
-                int RandomTicks = (TotalTicks / 100000);
+                int RandomTicks = (TotalTicks / 5000);
 
                 TotalTicks = 0;
                 Ticks = 0;
@@ -148,16 +150,26 @@ namespace CA_problem
 
                 if (RandomTicks > PrimeTicks)
                 {
-                    //Console.WriteLine("Primes win");
+                    Console.WriteLine("Primes wins by " + (RandomTicks - PrimeTicks) + " when there are " + NoOfNodes + " nodes");
                 }
                 if (PrimeTicks > RandomTicks)
                 {
-                    Console.WriteLine("Random wins" + NoOfNodes);
+                    Console.WriteLine("Random wins by " + (PrimeTicks - RandomTicks) + " when there are " + NoOfNodes + " nodes");
                     Counter++;
                 }
+                if (PrimeTicks == RandomTicks)
+                {
+                    Console.WriteLine("Draw at " + NoOfNodes + " nodes");
+                }
+
+                lines.Add(NoOfNodes + "," + PrimeTicks + "," + RandomTicks);
+
                 TotalTicks = 0;
                 Ticks = 0;
             }
+
+
+            File.WriteAllLines(@"F:\CA\CSMA.csv", lines);
             Console.WriteLine("Done " + Counter);
             Console.ReadKey();
         }
